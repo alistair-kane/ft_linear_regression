@@ -6,11 +6,11 @@ use std::{error::Error, io, process};
 
 #[derive(serde::Deserialize)]
 pub struct Thetas {
-    theta0: f32,
-    theta1: f32,
+    pub theta0: f32,
+    pub theta1: f32,
 }
 
-pub fn read_or_create_file(file_path: String) -> Result<(Thetas), Box<dyn Error>> {
+pub fn read_or_create_file() -> Result<(Thetas), Box<dyn Error>> {
 	let file_path: String = "data/saved_theta.csv".to_string();
 	let mut thetas = Thetas {
 		theta0: 0.0,
@@ -19,11 +19,11 @@ pub fn read_or_create_file(file_path: String) -> Result<(Thetas), Box<dyn Error>
 	if std::path::Path::new(&file_path).exists() {
 		println!("In file {file_path}");
 		let mut rdr = csv::Reader::from_path(file_path)?;
-		for result in rdr.records() {		
-			let record = result?;
-			thetas = record.deserialize(None)?;
-			println!("IN FILE:{}", thetas.theta0);
-			println!("IN FILE:{}", thetas.theta1);
+		for record in rdr.records() {		
+			let line = record?;
+			thetas = line.deserialize(None)?;
+			// println!("IN FILE:{}", thetas.theta0);
+			// println!("IN FILE:{}", thetas.theta1);
 			break;
 		}
 	}

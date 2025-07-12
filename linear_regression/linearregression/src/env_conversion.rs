@@ -1,31 +1,31 @@
 use std::env;
+use std::process;
 
-pub fn read_env(index: u32) -> Result<(f32), Box<dyn std::error::Error>>{
+pub fn read_env(index: u32) -> f32 {
     let env_var = format!("THETA{}", index);
     let env = match env::var(&env_var) {
         Ok(value) => value,
         Err(e) => 
         {
             println!("couldn't interpret {}: {}", env_var, e);
-            return panic!("Problem opening the index: {index:?}")
+            process::exit(1);
         },
     };
-    println!("Hell yeah your read env is {}", env);
-    return Ok(env.parse().unwrap());
+    
+    // println!("Read env theta: {} is {}", env_var, env);
+    let result: f32 = env.parse().unwrap();
+    // println!("RESULT OF UNWRAP: {}", result);
+    return result
 }
 
-// pub fn set_env(key: String, value: f32)
-// {
-//     env::set_var(key, value.to_string());
-// }
-
-
-// pub fn env_conversion()
-// {
-//     for (n,v) in env::vars() {
-//         println!("{}: {}", n,v);
-//     }
-// }
+pub fn set_env(index: u32, value: f32)
+{
+    let env_var = format!("THETA{}", index);
+    println!("updating env theta: {} is {}", env_var, value);
+    unsafe {
+        env::set_var(env_var, value.to_string());
+    }
+}
 
 // fn main() {
 //     let key = "THETA1";
