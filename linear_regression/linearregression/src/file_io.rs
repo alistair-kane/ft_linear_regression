@@ -10,20 +10,19 @@ fn create_file(file_path: String) {
 		
 		println!("With text:\n{contents}");
 	}	
-	println!("Writing File {file_path}");
+	else {
+		println!("Writing File {file_path}");
+		let mut file = OpenOptions::new()
+			.create_new(true)
+			.write(true)
+			.append(true)
+			.open(file_path)
+			.unwrap();
 	
-	fs::File::create("test_file.txt").unwrap();
-	let mut file = OpenOptions::new()
-		.create_new(true)
-		.write(true)
-		.append(true)
-		.open(file)
-		.unwrap();
-
-	if let Err(e) = writeln!(file, "{}", "HMMMMMM") {
-		eprintln!("Couldn't write to file: {}", e);
+		if let Err(e) = writeln!(file, "{}", "0, 0") {
+			eprintln!("Couldn't write to file: {}", e);
+		}
 	}
-	
 }
 
 pub fn read_or_create_file() {
