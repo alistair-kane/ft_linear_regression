@@ -18,14 +18,13 @@ fn create_file(file_path: String) {
 			.append(true)
 			.open(file_path)
 			.unwrap();
-	
-		if let Err(e) = writeln!(file, "{}", "0, 0") {
+		if let Err(e) = writeln!(file, "{}", "1, 2\n0, 0") {
 			eprintln!("Couldn't write to file: {}", e);
 		}
 	}
 }
 
 pub fn read_or_create_file() {
-	let file_path: String = "saved_theta.csv".to_string();
+	let file_path: String = "data/saved_theta.csv";
 	create_file(file_path)
 }
