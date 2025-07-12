@@ -1,15 +1,32 @@
 use std::fs;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
+use serde::Deserialize;
+use std::{error::Error, io, process};
 
-fn create_file(file_path: String) {
+#[derive(serde::Deserialize)]
+pub struct Thetas {
+    theta0: f32,
+    theta1: f32,
+}
+
+pub fn read_or_create_file(file_path: String) -> Result<(Thetas), Box<dyn Error>> {
+	let file_path: String = "data/saved_theta.csv".to_string();
+	let mut thetas = Thetas {
+		theta0: 0.0,
+		theta1: 0.0,
+	};
 	if std::path::Path::new(&file_path).exists() {
 		println!("In file {file_path}");
-		let contents = fs::read_to_string(&file_path)
-			.expect("Should have been able to read the file");
-		
-		println!("With text:\n{contents}");
-	}	
+		let mut rdr = csv::Reader::from_path(file_path)?;
+		for result in rdr.records() {		
+			let record = result?;
+			thetas = record.deserialize(None)?;
+			println!("IN FILE:{}", thetas.theta0);
+			println!("IN FILE:{}", thetas.theta1);
+			break;
+		}
+	}
 	else {
 		println!("Writing File {file_path}");
 		let mut file = OpenOptions::new()
@@ -18,13 +35,11 @@ fn create_file(file_path: String) {
 			.append(true)
 			.open(file_path)
 			.unwrap();
-		if let Err(e) = writeln!(file, "{}", "1, 2\n0, 0") {
+		if let Err(e) = writeln!(file, "{}", "theta0,theta1\n0.0,0.0") {
 			eprintln!("Couldn't write to file: {}", e);
 		}
 	}
+	Ok(thetas)
 }
 
-pub fn read_or_create_file() {
-	let file_path: String = "data/saved_theta.csv";
-	create_file(file_path)
-}
+
