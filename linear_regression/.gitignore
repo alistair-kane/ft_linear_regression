@@ -13,4 +13,4 @@ linearregression/**/*.rs.bk
 # MSVC Windows builds of rustc generate these, which store debugging information
 linearregression/pdb
 
-# End of https://mrkandreev.name/snippets/gitignore-generator/#Rust
+linearregression/data/saved_theta.csv
