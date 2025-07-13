@@ -1,7 +1,7 @@
 use std::env;
 use std::process;
 
-pub fn read_env(index: u32) -> f32 {
+pub fn get_env(index: u32) -> f32 {
     let env_var = format!("THETA{}", index);
     let env = match env::var(&env_var) {
         Ok(value) => value,

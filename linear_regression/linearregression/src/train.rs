@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use crate::env_conversion::read_env;
+use crate::env_conversion::get_env;
 use crate::env_conversion::set_env;
 use crate::estimate_price::estimate_price;
 use crate::file_io::update_file;
@@ -55,8 +55,8 @@ fn create_vector() -> Result<Vec<(f32, f32)>, Box<dyn Error>> {
 
 fn train(vector: &Vec<(f32, f32)>) {
     let learning_rate: f32 = 0.1;
-    let mut theta0: f32 = read_env(0);
-    let mut theta1: f32 = read_env(1);
+    let mut theta0: f32 = get_env(0);
+    let mut theta1: f32 = get_env(1);
     let mut sum_error: f32 = 0.0;
     let mut sum_error_price: f32 = 0.0;
     let m: usize = vector.len();

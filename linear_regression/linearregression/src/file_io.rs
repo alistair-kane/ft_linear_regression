@@ -2,7 +2,7 @@ use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::{error::Error, process};
 
-use crate::env_conversion::read_env;
+use crate::env_conversion::get_env;
 
 #[derive(serde::Deserialize)]
 pub struct Thetas {
@@ -44,8 +44,8 @@ pub fn read_or_create_file() -> Result<Thetas, Box<dyn Error>> {
 }
 
 pub fn update_file() {
-    let theta0: f32 = read_env(0);
-    let theta1: f32 = read_env(1);
+    let theta0: f32 = get_env(0);
+    let theta1: f32 = get_env(1);
     let thetas = Thetas { theta0, theta1 };
     if let Err(e) = write_to_file(&thetas) {
         eprintln!("Couldn't write to file: {}", e);
