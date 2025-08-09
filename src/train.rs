@@ -90,10 +90,22 @@ pub fn train_for_epochs(epochs: u32) {
         let mse = train(&vector);
         epochs_vec.push(i as f32);
         mse_values.push(mse);
-
+        
+        // Print progress every 10 epochs
+        if (i + 1) % 10 == 0 {
+            println!("Epoch {}: MSE = {:.6}", i + 1, mse);
+        }
     }
-    let mut plot = Plot::new((&epochs_vec, &mse_values));
-    plot.set_xlabel("Epoch");
-    plot.set_ylabel("Mean Squared Error");
-    plot.show();
+    
+    // Print final results
+    println!("Training completed!");
+    println!("Final MSE: {:.6}", mse_values.last().unwrap());
+    println!("Final theta0: {:.6}", get_env(0));
+    println!("Final theta1: {:.6}", get_env(1));
+    
+    // Create plot but don't show it automatically (commented out to prevent hanging)
+    // let mut plot = Plot::new((&epochs_vec, &mse_values));
+    // plot.set_xlabel("Epoch");
+    // plot.set_ylabel("Mean Squared Error");
+    // plot.show();
 }

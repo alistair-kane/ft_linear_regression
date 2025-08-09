@@ -65,5 +65,7 @@ fn main() {
 
     let mut ploto = Plot::new((mileages, prices, "o"));
     ploto.add((line_mileages, line_prices, "r-"));
-    ploto.show();
+    // ploto.show(); // Commented out to prevent hanging
+    println!("Plot data generated but not displayed to prevent hanging.");
+    println!("Program completed successfully!");
 }
