@@ -1,4 +1,5 @@
 use std::error::Error;
+use graplot::Plot;
 
 use crate::env_conversion::get_env;
 use crate::env_conversion::set_env;
@@ -54,24 +55,28 @@ fn create_vector() -> Result<Vec<(f32, f32)>, Box<dyn Error>> {
     Ok(normalised_vector)
 }
 
-fn train(vector: &Vec<(f32, f32)>) {
+fn train(vector: &Vec<(f32, f32)>) -> f32 {
     let learning_rate: f32 = 0.1;
     let mut theta0: f32 = get_env(0);
     let mut theta1: f32 = get_env(1);
     let mut sum_error: f32 = 0.0;
     let mut sum_error_price: f32 = 0.0;
+    let mut mse: f32 = 0.0;
     let m: usize = vector.len();
     for i in 0..m {
         let error = estimate_price(vector[i].0) - vector[i].1;
         sum_error += error;
         sum_error_price += error * vector[i].0;
+        mse += error * error;
     }
+    mse /= m as f32;
     let gradient0: f32 = (1.0 / m as f32) * sum_error;
     let gradient1: f32 = (1.0 / m as f32) * sum_error_price;
     theta0 = theta0 - learning_rate * gradient0;
     theta1 = theta1 - learning_rate * gradient1;
     set_env(0, theta0);
     set_env(1, theta1);
+    return mse;
 }
 
 pub fn train_for_epochs(epochs: u32) {
@@ -79,7 +84,16 @@ pub fn train_for_epochs(epochs: u32) {
         Ok(v) => v,
         Err(_) => return,
     };
-    for _ in 0..epochs {
-        train(&vector);
+    let mut epochs_vec: Vec<f32> = Vec::new();
+    let mut mse_values: Vec<f32> = Vec::new();
+    for i in 0..epochs {
+        let mse = train(&vector);
+        epochs_vec.push(i as f32);
+        mse_values.push(mse);
+
     }
+    let mut plot = Plot::new((&epochs_vec, &mse_values));
+    plot.set_xlabel("Epoch");
+    plot.set_ylabel("Mean Squared Error");
+    plot.show();
 }
