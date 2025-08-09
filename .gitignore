@@ -17,6 +17,6 @@ linearregression/data/saved_theta.csv
 linearregression/data/saved_min_max.csv
 
 .DS_Store
-Cargo.*
+Cargo.lock
  
 target/
