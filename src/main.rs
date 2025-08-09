@@ -2,6 +2,7 @@ mod env_conversion;
 mod estimate_price;
 mod file_io;
 mod train;
+use graplot::Plot;
 
 fn main() {
     let thetas: file_io::Thetas = match file_io::read_or_create_file() {
@@ -32,4 +33,13 @@ fn main() {
     let real_price = norm_price * (max_price - min_price) + min_price;
     println!("Denormalised Price: {}", real_price);
     println!("Estimated price for {} mileage: {}", real_mileage, real_price);
+    
+    let xs = [0., 1., 2., 3., 4., 5.];
+    let ys = [32., 1., 4., 9., 16., 25.];
+    
+    let mut plot = Plot::new((&xs, &ys));
+    plot.set_xlabel("Mileage");
+    plot.set_ylabel("Price");
+
+    plot.show();
 }
