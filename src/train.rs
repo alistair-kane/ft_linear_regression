@@ -12,7 +12,7 @@ struct Row {
     price: f32,
 }
 
-fn create_vector() -> Result<Vec<(f32, f32)>, Box<dyn Error>> {
+pub fn create_vector() -> Result<Vec<(f32, f32)>, Box<dyn Error>> {
     let mut min_milage = f32::MAX;
     let mut max_milage = f32::MIN;
     let mut min_price = f32::MAX;
