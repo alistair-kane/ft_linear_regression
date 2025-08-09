@@ -3,7 +3,7 @@ use std::error::Error;
 use crate::env_conversion::get_env;
 use crate::env_conversion::set_env;
 use crate::estimate_price::estimate_price;
-use crate::file_io::update_file;
+use crate::file_io::update_file_min_max;
 
 #[derive(serde::Deserialize)]
 struct Row {
@@ -50,6 +50,7 @@ fn create_vector() -> Result<Vec<(f32, f32)>, Box<dyn Error>> {
         };
         normalised_vector.push((norm_milage, norm_price));
     }
+    let _ = update_file_min_max(min_milage, max_milage, min_price, max_price);
     Ok(normalised_vector)
 }
 
@@ -65,8 +66,8 @@ fn train(vector: &Vec<(f32, f32)>) {
         sum_error += error;
         sum_error_price += error * vector[i].0;
     }
-    let gradient0 = (1.0 / m as f32) * sum_error;
-    let gradient1 = (1.0 / m as f32) * sum_error_price;
+    let gradient0: f32 = (1.0 / m as f32) * sum_error;
+    let gradient1: f32 = (1.0 / m as f32) * sum_error_price;
     theta0 = theta0 - learning_rate * gradient0;
     theta1 = theta1 - learning_rate * gradient1;
     set_env(0, theta0);
@@ -80,7 +81,5 @@ pub fn train_for_epochs(epochs: u32) {
     };
     for _ in 0..epochs {
         train(&vector);
-        // update thetas file
-        update_file();
     }
 }

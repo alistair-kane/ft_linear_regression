@@ -14,3 +14,4 @@ linearregression/**/*.rs.bk
 linearregression/pdb
 
 linearregression/data/saved_theta.csv
+linearregression/data/saved_min_max.csv
