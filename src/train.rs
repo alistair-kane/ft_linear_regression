@@ -92,8 +92,9 @@ pub fn train_for_epochs(epochs: u32) {
         mse_values.push(mse);
 
     }
-    let mut plot = Plot::new((&epochs_vec, &mse_values));
-    plot.set_xlabel("Epoch");
-    plot.set_ylabel("Mean Squared Error");
-    plot.show();
+    let mut plotmse = Plot::new((&epochs_vec, &mse_values));
+    plotmse.set_xlabel("Epoch");
+    plotmse.set_ylabel("Mean Squared Error");
+    plotmse.show_threaded();
+
 }

@@ -1,3 +1,5 @@
+use graplot::Plot;
+
 mod env_conversion;
 mod estimate_price;
 mod file_io;
