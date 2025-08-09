@@ -2,7 +2,7 @@ mod env_conversion;
 mod estimate_price;
 mod file_io;
 mod train;
-
+use graplot::Plot;
 fn main() {
     let thetas: file_io::Thetas = match file_io::read_or_create_file() {
         Ok(val) => val,
@@ -63,7 +63,7 @@ fn main() {
         })
         .collect();
 
-    let mut plot = Plot::new((mileages, prices, "o"));
-    plot.add((line_mileages, line_prices, "r-"));
-    plot.show();
+    let mut ploto = Plot::new((mileages, prices, "o"));
+    ploto.add((line_mileages, line_prices, "r-"));
+    ploto.show();
 }
