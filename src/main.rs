@@ -26,6 +26,23 @@ fn main() {
             return;
         }
     };
+
+
+
+    // Here
+    let vector = match train::create_vector() {
+        Ok(v) => v,
+        Err(_) => return,
+    };
+    let mileages: Vec<f32> = vector
+        .iter()
+        .map(|(m, _)| m * (max_milage - min_milage) + min_milage)
+        .collect();
+    let prices: Vec<f32> = vector
+        .iter()
+        .map(|(_, p)| p * (max_price - min_price) + min_price)
+        .collect();
+
     let real_mileage: f32 = 300000.0;
     let norm_milage: f32 = (real_mileage - min_milage) / (max_milage - min_milage);
     println!("Normalised Mileage: {}", norm_milage);
@@ -33,13 +50,21 @@ fn main() {
     let real_price = norm_price * (max_price - min_price) + min_price;
     println!("Denormalised Price: {}", real_price);
     println!("Estimated price for {} mileage: {}", real_mileage, real_price);
+    let final_theta0 = env_conversion::get_env(0);
+    let final_theta1 = env_conversion::get_env(1);
     
-    let xs = [0., 1., 2., 3., 4., 5.];
-    let ys = [32., 1., 4., 9., 16., 25.];
-    
-    let mut plot = Plot::new((&xs, &ys));
-    plot.set_xlabel("Mileage");
-    plot.set_ylabel("Price");
+    // Generate two points for the regression line
+    let line_mileages: Vec<f32> = vec![min_milage, max_milage];
+    let line_prices: Vec<f32> = line_mileages
+        .iter()
+        .map(|m| {
+            let norm_m = (m - min_milage) / (max_milage - min_milage);
+            let norm_p = final_theta0 + final_theta1 * norm_m;
+            norm_p * (max_price - min_price) + min_price
+        })
+        .collect();
 
+    let mut plot = Plot::new((mileages, prices, "o"));
+    plot.add((line_mileages, line_prices, "r-"));
     plot.show();
 }
