@@ -1,5 +1,5 @@
 use std::error::Error;
-use graplot::Plot;
+use plotters::prelude::*;
 
 use crate::env_conversion::get_env;
 use crate::env_conversion::set_env;
@@ -79,22 +79,42 @@ fn train(vector: &Vec<(f32, f32)>) -> f32 {
     return mse;
 }
 
+fn draw_mse_plot(mse_vec: &Vec<f32>, epochs: u32) {
+    // Create a plot using plotters
+    let root = BitMapBackend::new("mse_plot.png", (640, 480)).into_drawing_area();
+    root.fill(&WHITE).unwrap();
+    let mut chart = ChartBuilder::on(&root)
+        .caption("Mean Squared Error over Epochs", ("sans-serif", 50))
+        .margin(10)
+        .x_label_area_size(30)
+        .y_label_area_size(30)
+        .build_cartesian_2d(0f32..epochs as f32, 0f32..mse_vec.iter().cloned().fold(0./0., f32::max))
+        .unwrap();
+
+    chart.configure_mesh().draw().unwrap();
+
+    chart
+        .draw_series(LineSeries::new(
+            (0..epochs).map(|x| (x as f32, mse_vec[x as usize])),
+            &RED,
+        ))
+        .unwrap()
+        .label("MSE")
+        .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED));
+
+    chart.configure_series_labels().background_style(&WHITE.mix(0.8)).draw().unwrap();
+}
+
 pub fn train_for_epochs(epochs: u32) {
     let vector = match create_vector() {
         Ok(v) => v,
         Err(_) => return,
     };
-    let mut epochs_vec: Vec<f32> = Vec::new();
-    let mut mse_values: Vec<f32> = Vec::new();
-    for i in 0..epochs {
+
+    let mut mse_vec: Vec<f32> = Vec::new();
+    for _ in 0..epochs {
         let mse = train(&vector);
-        epochs_vec.push(i as f32);
-        mse_values.push(mse);
-
+        mse_vec.push(mse);
     }
-    let mut plotmse = Plot::new((&epochs_vec, &mse_values));
-    plotmse.set_xlabel("Epoch");
-    plotmse.set_ylabel("Mean Squared Error");
-    plotmse.show_threaded();
-
+    draw_mse_plot(&mse_vec, epochs);
 }

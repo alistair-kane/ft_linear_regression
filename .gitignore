@@ -20,3 +20,5 @@ data/saved_min_max.csv
 Cargo.lock
  
 target/
+
+*.png
