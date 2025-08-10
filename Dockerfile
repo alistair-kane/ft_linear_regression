@@ -21,8 +21,6 @@ COPY . .
 # Build the project
 RUN cargo build --release
 
-# Expose the port if your application uses one (optional)
-# EXPOSE 8080
 
 # Run the application
-CMD ["cargo", "run", "--release"]
+# CMD ["cargo", "run", "--release"]

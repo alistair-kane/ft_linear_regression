@@ -17,7 +17,6 @@ data/saved_theta.csv
 data/saved_min_max.csv
 
 .DS_Store
-Cargo.lock
  
 target/
 
