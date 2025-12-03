@@ -1,6 +1,6 @@
 use std::error::Error;
-use plotters::prelude::*;
 
+use crate::draw_plots::draw_mse_plot;
 use crate::env_conversion::get_env;
 use crate::env_conversion::set_env;
 use crate::estimate_price::estimate_price;
@@ -77,32 +77,6 @@ fn train(vector: &Vec<(f32, f32)>) -> f32 {
     set_env(0, theta0);
     set_env(1, theta1);
     return mse;
-}
-
-fn draw_mse_plot(mse_vec: &Vec<f32>, epochs: u32) {
-    // Create a plot using plotters
-    let root = BitMapBackend::new("mse_plot.png", (640, 480)).into_drawing_area();
-    root.fill(&WHITE).unwrap();
-    let mut chart = ChartBuilder::on(&root)
-        .caption("Mean Squared Error over Epochs", ("sans-serif", 50))
-        .margin(10)
-        .x_label_area_size(30)
-        .y_label_area_size(30)
-        .build_cartesian_2d(0f32..epochs as f32, 0f32..mse_vec.iter().cloned().fold(0./0., f32::max))
-        .unwrap();
-
-    chart.configure_mesh().draw().unwrap();
-
-    chart
-        .draw_series(LineSeries::new(
-            (0..epochs).map(|x| (x as f32, mse_vec[x as usize])),
-            &RED,
-        ))
-        .unwrap()
-        .label("MSE")
-        .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED));
-
-    chart.configure_series_labels().background_style(&WHITE.mix(0.8)).draw().unwrap();
 }
 
 pub fn train_for_epochs(epochs: u32) {
