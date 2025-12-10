@@ -55,18 +55,18 @@ pub fn create_vector() -> Result<Vec<(f32, f32)>, Box<dyn Error>> {
     Ok(normalised_vector)
 }
 
-fn train(vector: &Vec<(f32, f32)>) -> f32 {
+fn train(mileage_vector: &Vec<(f32, f32)>) -> f32 {
     let learning_rate: f32 = 0.1;
     let mut theta0: f32 = get_env(0);
     let mut theta1: f32 = get_env(1);
     let mut sum_error: f32 = 0.0;
     let mut sum_error_price: f32 = 0.0;
     let mut mse: f32 = 0.0;
-    let m: usize = vector.len();
+    let m: usize = mileage_vector.len();
     for i in 0..m {
-        let error = estimate_price(vector[i].0) - vector[i].1;
+        let error = estimate_price(mileage_vector[i].0) - mileage_vector[i].1;
         sum_error += error;
-        sum_error_price += error * vector[i].0;
+        sum_error_price += error * mileage_vector[i].0;
         mse += error * error;
     }
     mse /= m as f32;
