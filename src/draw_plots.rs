@@ -37,14 +37,16 @@ pub fn draw_scatterplot_and_regression(real_mileage: f32, norm_price: f32, min_m
     root.fill(&WHITE).unwrap();
     let mut chart = ChartBuilder::on(&root)
         .caption("Mileage vs Price", ("sans-serif", 40).into_font())
-        .margin(5)
+        .margin(30)
         .x_label_area_size(30)
         .y_label_area_size(30)
         .build_cartesian_2d(min_milage..max_milage, min_price..max_price)
         .unwrap();
 
     chart
-        .configure_series_labels()
+        .configure_mesh()
+        .x_desc("Mileage")
+        .y_desc("Price")
         .draw()
         .unwrap();
 
@@ -83,13 +85,18 @@ pub fn draw_mse_plot(mse_vec: &Vec<f32>, epochs: u32) {
     root.fill(&WHITE).unwrap();
     let mut chart = ChartBuilder::on(&root)
         .caption("Mean Squared Error over Epochs", ("sans-serif", 40))
-        .margin(10)
+        .margin(30)
         .x_label_area_size(30)
         .y_label_area_size(30)
         .build_cartesian_2d(0f32..epochs as f32, 0f32..mse_vec.iter().cloned().fold(0./0., f32::max))
         .unwrap();
 
-    chart.configure_mesh().draw().unwrap();
+    chart
+        .configure_mesh()
+        .x_desc("Epochs")
+        .y_desc("MSE")
+        .draw()
+        .unwrap();
 
     chart
         .draw_series(LineSeries::new(
